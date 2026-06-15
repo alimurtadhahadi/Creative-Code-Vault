@@ -1,0 +1,95 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+enum enDayOfWeek { Sat = 1, Sun = 2, Mon = 3, Tue = 4, Wed = 5,
+	Thu = 6,Fri = 7 };
+enum enMonthOfYear {
+	Jan = 1, Feb = 2, Mar = 3, Apr = 4, May = 5, Jun = 6,
+	Jul = 7, Aug = 8, Sep = 9, Oct = 10, Nov = 11, Dec = 12
+};
+int ReadPositiveNumber(string Message)
+{
+	int Number;
+	do {
+		cout << Message;
+		cin >> Number;
+	} while (Number <= 0); 
+	return Number;
+}
+int ReadDay()
+{
+	return ReadPositiveNumber("Enter any day number to find its details: ");
+}
+enDayOfWeek GetDayOfWeek(int Day)
+{
+	switch (Day % 7)
+	{
+	case 1:  return enDayOfWeek::Sat;
+	case 2:  return enDayOfWeek::Sun;
+	case 3:  return enDayOfWeek::Mon;
+	case 4:  return enDayOfWeek::Tue;
+	case 5:  return enDayOfWeek::Wed;
+	case 6:  return enDayOfWeek::Thu;
+	default: return enDayOfWeek::Fri;
+	}
+}
+string GetDayName(enDayOfWeek DayOfWeek)
+{
+	string ArrDayNames[] = { "", "Saturday", "Sunday","Monday","Tuesday", "Wednesday", "Thursday", "Friday" };
+	return ArrDayNames[DayOfWeek];
+}
+float GetNumberOfWeek(float Day)
+{
+	return ceil(Day / 7);
+}
+enMonthOfYear GetMonthOfYear(int Day)
+{
+	if (Day % 365 == 0) { return enMonthOfYear::Dec; }
+	else if (Day % 365 <= 31) { return enMonthOfYear::Jan; }
+	else if (Day % 365 <= 59) { return enMonthOfYear::Feb; }
+	else if (Day % 365 <= 90) { return enMonthOfYear::Mar; }
+	else if (Day % 365 <= 120) { return enMonthOfYear::Apr; }
+	else if (Day % 365 <= 151) { return enMonthOfYear::May; }
+	else if (Day % 365 <= 181) { return enMonthOfYear::Jun; }
+	else if (Day % 365 <= 212) { return enMonthOfYear::Jul; }
+	else if (Day % 365 <= 243) { return enMonthOfYear::Aug; }
+	else if (Day % 365 <= 273) { return enMonthOfYear::Sep; }
+	else if (Day % 365 <= 304) { return enMonthOfYear::Oct; }
+	else if (Day % 365 <= 334) { return enMonthOfYear::Nov; }
+	else { return enMonthOfYear::Dec; }
+}
+int GetNumberOfMonth(int Day)
+{
+	return GetMonthOfYear(Day);
+}
+string GetMonthName(enMonthOfYear Month)
+{
+	string ArrMonthNames[] = { "", "January", "February", "March", "April", "May", "June",
+							   "July", "August", "September", "October", "November", "December" };
+	return ArrMonthNames[Month];
+}
+float GetNumberOfYear(float Day)
+{
+	return ceil(Day / 365);
+}
+void PrintResult()
+{
+	int Day = ReadDay();
+	enDayOfWeek DayOfWeek = GetDayOfWeek(Day);
+	enMonthOfYear MonthOfYear = GetMonthOfYear(Day);
+
+	cout << endl << "Your Input Number is: " << Day << endl;
+	cout << "===============================================" << endl;
+	cout << "* The number of week is  : " << GetNumberOfWeek(Day) << endl;
+	cout << "* The day name is        : " << GetDayName(DayOfWeek) << endl;
+	cout << "* The number of month is : " << GetNumberOfMonth(Day) << endl;
+	cout << "* The Month name is      : " << GetMonthName(MonthOfYear) << endl;
+	cout << "* The Number of year is  : " << GetNumberOfYear(Day) << endl;
+	cout << "===============================================" << endl;
+}
+int main()
+{
+	PrintResult();
+	return 0;
+}
