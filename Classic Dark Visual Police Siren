@@ -1,0 +1,43 @@
+/*
+======================================================================
+⚙️ Project      : Classic Dark Visual Police Siren (Muted Edition)
+👤 Author       : Ali_Dev (@Ali_Dev-Code-Lab)
+🌐 Channel URL  : https://www.youtube.com/channel/UCaSc-7rRD4t0fVPI67UErzQ
+📝 Course       : Independent Lab Work (Color Spectrum Calibration)
+📝 Description  : Alternates terminal colors using standard dark red and
+                  classic dark blue ANSI codes for a realistic silent strobe.
+======================================================================
+*/
+
+#include <iostream>
+#include <string>
+#include <windows.h> // Library for the Sleep timing function
+
+using namespace std;
+
+int main()
+{
+    // Fast loop: Runs 100 times with zero lag and rich dark colors
+    for (int i = 1; i <= 100; i++) {
+
+        // --- 1. CLASSIC RED PHASE (Standard Dark Red Background + White Text) ---
+        cout << "\033[41;97m\033[H\033[J";
+        cout << "==================================\n";
+        cout << "     POLICE DETECTED: ALI_DEV     \n";
+        cout << "==================================\n";
+        Sleep(250); // Frame delay for the red light state
+
+        // --- 2. CLASSIC BLUE PHASE (Standard Dark Blue Background + White Text) ---
+        cout << "\033[44;97m\033[H\033[J";
+        cout << "==================================\n";
+        cout << "     POLICE DETECTED: ALI_DEV     \n";
+        cout << "==================================\n";
+        Sleep(250); // Frame delay for the blue light state
+    }
+
+    // --- 3. RESET PHASE (Restores terminal to safe default black) ---
+    cout << "\033[0m\033[H\033[J";
+    cout << "\n[ System Restored. Emergency visual test completed successfully! ]\n";
+
+    return 0;
+}
