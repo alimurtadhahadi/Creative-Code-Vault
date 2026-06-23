@@ -1,0 +1,76 @@
+/*
+=================================== ⚙️ ﷽ ===================================
+  [PROBLEM] │ Custom Number Guessing Game (Practice)
+  ----------|---------------------------------------------------------------
+  [AUTHOR]  │ Ali_Dev (@Ali_DevCode_Lab)
+  ----------|---------------------------------------------------------------
+  [DATE]    │ June 24, 2026 (Wednesday)
+  ----------|---------------------------------------------------------------
+  [DESC]    │ An interactive number guessing game providing dynamic feedback
+  ----------| (Higher/Lower) bounded strictly within a secure 10-try limit.
+  ----------|---------------------------------------------------------------
+  [URL]     │ TG: t.me/Ali_DevCode_Lab │ YT: youtube.com/Ali_Dev_Hub │ GH: github.com/alimurtadhahadi
+===========================================================================
+*/
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+// Core mathematical function to isolate and scale pseudo-random outputs
+int RandomNumber(int From, int To)
+{
+    int randNum = rand() % (To - From + 1) + From;
+    return randNum;
+}
+// System core engine to manage guessing game streams and boundary checks
+void PlayGuessingGame(int SecretNumber)
+{
+    int UserNumber;
+    int MaxTries = 10;
+    int Counter = 0;
+
+    // Capture the initial tracking guess (Trial #1)
+    cout << "Please enter a number between 1 and 100: ";
+    cin >> UserNumber;
+    Counter++;
+
+    // Execute dynamic feedback looping bounded by total remaining attempts
+    while (UserNumber != SecretNumber && Counter < MaxTries)
+    {
+        if (SecretNumber > UserNumber)
+        {
+            cout << "Remaining " << (MaxTries - Counter) << " tries. The secret number is Higher: ";
+        }
+        else
+        {
+            cout << "Remaining " << (MaxTries - Counter) << " tries. The secret number is Lower: ";
+        }
+
+        cin >> UserNumber;
+        Counter++; // Advance the operational attempt counter vector
+    }
+
+    // Centralized binary state check to declare final pipeline execution outcome
+    if (UserNumber == SecretNumber)
+    {
+        cout << "\nYou Win!! Found after " << Counter << " attempt(s)." << endl;
+    }
+    else
+    {
+        cout << "\nYou Lost!! Out of attempts. The secret number was: " << SecretNumber << endl;
+    }
+}
+
+int main()
+{
+    // Seed the PRNG matrix with the local hardware system clock once at boot
+    srand((unsigned)time(NULL));
+
+    // Generate an unsigned short random target variable bounded between 1 and 100
+    unsigned short SecretNumber = RandomNumber(1, 100);
+
+    // Deploy the verified guessing game driver
+    PlayGuessingGame(SecretNumber);
+
+    return 0;
+}
