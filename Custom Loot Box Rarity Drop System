@@ -1,0 +1,63 @@
+/*
+=================================== ⚙️ ﷽ ===================================
+  [PROBLEM] │ Custom Loot Box Rarity Drop System (Practice)
+  ----------|---------------------------------------------------------------
+  [AUTHOR]  │ Ali_Dev (@Ali_DevCode_Lab)
+  ----------|---------------------------------------------------------------
+  [DATE]    │ June 23, 2026 (Tuesday)
+  ----------|---------------------------------------------------------------
+  [DESC]    │ Simulates a gaming loot box drop mechanic by mapping random scalar
+  ----------| parameters to multi-tier conditional rarity boundaries.
+  ----------|---------------------------------------------------------------
+  [URL]     │ TG: t.me/Ali_DevCode_Lab │ YT: youtube.com/Ali_Dev_Hub │ GH: github.com/alimurtadhahadi
+===========================================================================
+*/
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+// Core mathematical function to isolate and scale pseudo-random outputs
+int RandomNumber(int From, int To)
+{
+    int randNum = rand() % (To - From + 1) + From;
+    return randNum;
+}
+// System core function to process and filter drop probabilities via boundaries
+void CheckBoxType(int RandomNumber)
+{
+    // Tier 1: Special Box Boundaries (The Center Peak)
+    if (RandomNumber >= 26 && RandomNumber <= 29)
+    {
+        cout << "You got a Special box!!!!!!" << endl;
+    }
+    // Tier 2: Legendary Box Twin Splitted Boundaries
+    else if (RandomNumber >= 23 && RandomNumber <= 25 || RandomNumber >= 30 && RandomNumber <= 33)
+    {
+        cout << "You got a Legendary box!!!!!" << endl;
+    }
+    // Tier 3: Epic Box Twin Splitted Boundaries
+    else if (RandomNumber >= 18 && RandomNumber <= 22 || RandomNumber >= 34 && RandomNumber <= 37)
+    {
+        cout << "You got a Epic box!!!!" << endl;
+    }
+    // Tier 4: Rare Box Twin Splitted Boundaries
+    else if (RandomNumber >= 10 && RandomNumber <= 17 || RandomNumber >= 38 && RandomNumber <= 43)
+    {
+        cout << "You got a Rare box!!" << endl;
+    }
+    // Tier 5: Common Box Baseline (The Remainder Space)
+    else
+    {
+        cout << "You got a common box" << endl;
+    }
+}
+int main()
+{
+    // Seed the PRNG matrix with the local hardware system clock
+    srand((unsigned)time(NULL));
+    // Generate an unsigned short random number bounded between 1 and 50
+    unsigned short RandomNumberToBox = RandomNumber(1, 50);
+    // Direct token reference to trace output rarity
+    CheckBoxType(RandomNumberToBox);
+    return 0;
+}
