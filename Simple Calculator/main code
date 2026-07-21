@@ -1,0 +1,135 @@
+#include <iostream>
+#include "CalculatorLib.h"
+
+using namespace std;
+void runAdditionProgram()
+{
+    const int MAX_SIZE = 100;
+    int length = kiko::getArrayLength(MAX_SIZE);
+    float numbers[MAX_SIZE];
+    kiko::fillArrayNumbers(numbers, length);
+    float totalSum = kiko::calculateSumAdd(numbers, length);
+    cout << "Total Result = " << totalSum << endl;
+}
+void runSubtractionProgram()
+{
+    const int MAX_SIZE = 100;
+    int length = kiko::getArrayLength(MAX_SIZE);
+    float numbers[MAX_SIZE];
+    kiko::fillArrayNumbers(numbers, length);
+    float totalSum = kiko::calculateSumSub(numbers, length);
+    cout << "Total Result = " << totalSum << endl;
+}
+void runMultiplicationProgram()
+{
+    const int MAX_SIZE = 100;
+    int length = kiko::getArrayLength(MAX_SIZE);
+    float numbers[MAX_SIZE];
+    kiko::fillArrayNumbers(numbers, length);
+    float totalSum = kiko::calculateSumMul(numbers, length);
+    cout << "Total Result = " << totalSum << endl;
+}
+void runDivisionProgram()
+{
+    const int MAX_SIZE = 100;
+    int length = kiko::getArrayLength(MAX_SIZE);
+    float numbers[MAX_SIZE];
+    kiko::fillArrayNumbers(numbers, length);
+    float totalSum = kiko::calculateSumDiv(numbers, length);
+    cout << "Total Result = " << totalSum << endl;
+}
+void runPowerAndBaseProgram()
+{
+    float base, exponent;
+    cout << "\n=== Power & Base Calculator ===\n";
+    cout << "Please enter Base number: ";
+    cin >> base;
+    cout << "Please enter Exponent (Power): ";
+    cin >> exponent;
+
+    float result = kiko::calculatePower(base, exponent);
+
+    cout << "\nEquation: " << base << " ^ " << exponent << endl;
+    cout << "Total Result = " << result << endl;
+}
+void runRootsProgram()
+{
+    float number;
+    int degree;
+    cout << "\n=== Roots Calculator ===\n";
+    cout << "Please enter the Number: ";
+    cin >> number;
+    cout << "Please enter Root Degree (2 for sqrt, 3 for cbrt, 4, 5...): ";
+    cin >> degree;
+
+    float result = kiko::calculateRoot(number, degree);
+
+    if (result != 0.0f || number == 0.0f) {
+        cout << "\nEquation: Root(" << degree << ") of " << number << endl;
+        cout << "Total Result = " << result << endl;
+    }
+}
+void Menu()
+{
+    kiko::print("\\=====================================/\n");
+    kiko::print(" \\= Welcome to my first Lib program =/\n");
+    kiko::print("  \\====== Culcalator program =======/\n");
+    kiko::print("   \\======== 1. Adication =========/\n");
+    kiko::print("    \\======= 2.Subtraction =======/\n");
+    kiko::print("     \\==== 3.multiplication =====/\n");
+    kiko::print("      \\====== 4.division =======/\n");
+    kiko::print("       \\== 5.power and base ===/\n");
+    kiko::print("        \\===== 6. roots ======/\n");
+    kiko::print("         \\===================/\n");
+    kiko::print("          \\_________________/\n");
+    kiko::print("Please enter number from above numbers : ");
+}
+int Choice()
+{
+    int choice;
+    do {
+        Menu();
+        cin >> choice;
+        if (choice < 1 || choice > 6) {
+            system("cls");
+            kiko::erorr();
+            kiko::alert(3);
+            system("cls");
+        }
+    } while (choice < 1 || choice > 6);
+    return choice;
+}
+void runProcessOfUser(int choice)
+{
+    switch (choice) {
+    case 1:
+        runAdditionProgram();
+        break;
+    case 2:
+        runSubtractionProgram();
+        break;
+    case 3:
+        runMultiplicationProgram();
+        break;
+    case 4:
+        runDivisionProgram();
+        break;
+    case 5:
+        runPowerAndBaseProgram();
+        break;
+    case 6:
+        runRootsProgram();
+        break;
+    default:
+        system("cls");
+        kiko::erorr();
+        kiko::alert(3);
+        system("cls");
+    }
+}
+int main()
+{
+    int choice = Choice();
+    runProcessOfUser(choice);
+    return 0;
+}
