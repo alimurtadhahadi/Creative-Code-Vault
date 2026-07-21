@@ -1,0 +1,135 @@
+#pragma once
+#include <iostream>
+#include <windows.h>
+#include <cmath>
+#include <string>
+namespace kiko
+{
+    void alert(int times)
+    {
+        std::cout << "\a";
+        for (int i = 0; i < times; i++) {
+            system("color 4F");
+            Sleep(250);
+            system("color 0F");
+            Sleep(250);
+        }
+    }
+    void erorr()
+    {
+        std::cout << "\n\n\n\n\n\n\n\n\n";
+        std::cout << R"(
+                                   ______ _____   _____   ____   _____  
+                                  |  ____|  __ \ / __ \ / __ \ |  __ \ 
+                                  | |__  | |__) | |__) | |  | || |__) |
+                                  |  __| |  _  /|  _  /| |  | ||  _  / 
+                                  | |____| | \ \| | \ \| |__| || | \ \ 
+                                  |______|_|  \_\_|  \_\\____/ |_|  \_\
+)" << std::endl;
+    }
+    void print(const std::string& message)
+    {
+        std::cout << message;
+    }
+    int getArrayLength(int maxLimit)
+    {
+        int length = 0;
+        do {
+            std::cout << "Please enter Array Length (1 to " << maxLimit << "): ";
+            std::cin >> length;
+        } while (length <= 0 || length > maxLimit);
+
+        return length;
+    }
+    void fillArrayNumbers(float numbers[], int length)
+    {
+        std::cout << "\nPlease enter " << length << " numbers:\n";
+        for (int i = 0; i < length; i++) {
+            std::cout << "Number [" << i + 1 << "]: ";
+            std::cin >> numbers[i];
+        }
+    }
+    float calculateSumAdd(const float numbers[], int length)
+    {
+        float sum = 0.0f;
+        std::cout << "\nEquation: ";
+
+        for (int i = 0; i < length; i++) {
+            std::cout << numbers[i];
+            if (i < length - 1) {
+                std::cout << " + ";
+            }
+            sum += numbers[i];
+        }
+        std::cout << std::endl;
+
+        return sum;
+    }
+    float calculateSumSub(const float numbers[], int length)
+    {
+        if (length <= 0) return 0.0f;
+
+        float result = numbers[0];
+        std::cout << "\nEquation: " << numbers[0];
+
+        for (int i = 1; i < length; i++) {
+            std::cout << " - " << numbers[i];
+            result -= numbers[i];
+        }
+        std::cout << std::endl;
+
+        return result;
+    }
+    float calculateSumMul(const float numbers[], int length)
+    {
+        float sum = 1.0f;
+        std::cout << "\nEquation: ";
+
+        for (int i = 0; i < length; i++) {
+            std::cout << numbers[i];
+            if (i < length - 1) {
+                std::cout << " * ";
+            }
+            sum *= numbers[i];
+        }
+        std::cout << std::endl;
+
+        return sum;
+    }
+    float calculateSumDiv(const float numbers[], int length)
+    {
+        if (length <= 0) return 0.0f;
+        float result = numbers[0];
+        std::cout << "\nEquation: " << numbers[0];
+        for (int i = 1; i < length; i++) {
+            if (numbers[i] == 0.0f) {
+                std::cout << " / 0\n[Error]: Cannot divide by zero!";
+                return 0.0f;
+            }
+            std::cout << " / " << numbers[i];
+            result /= numbers[i];
+        }
+        std::cout << std::endl;
+
+        return result;
+    }
+    float calculatePower(float base, float exponent)
+    {
+        return std::pow(base, exponent);
+    }
+    float calculateRoot(float number, int degree)
+    {
+        if (degree == 0) {
+            std::cout << "\n[Error]: Root degree cannot be zero!\n";
+            return 0.0f;
+        }
+        if (number < 0 && degree % 2 == 0) {
+            std::cout << "\n[Error]: Cannot calculate even root for negative number!\n";
+            return 0.0f;
+        }
+        if (number < 0) {
+            return -std::pow(std::abs(number), 1.0f / degree);
+        }
+        return std::pow(number, 1.0f / degree);
+    }
+}
