@@ -1,0 +1,164 @@
+/*
+=================================== ⚙️ ﷽ ===================================
+  [PROJECT]  │ Student Grades Processing & Decision Engine
+  -----------|---------------------------------------------------------------
+  [AUTHOR]   │ Ali_Dev (@Ali_DevCode_Lab)
+  -----------|---------------------------------------------------------------
+  [DATE]     │ July 22, 2026 (Wednesday)
+  -----------|---------------------------------------------------------------
+  [STATUS]   │ Fully Refactored: Fixed Integer Division & Decision Mark Truncation.
+===========================================================================
+*/
+#include <iostream>
+#include <windows.h>
+#include <cmath>
+#include <string>
+using namespace std;
+void erorr()
+{
+    std::cout << "\n\n\n\n\n\n\n\n\n";
+    std::cout << R"(
+                                    ______ _____   _____   ____   _____  
+                                   |  ____|  __ \ / __ \ / __ \ |  __ \ 
+                                   | |__  | |__) | |__) | |  | || |__) |
+                                   |  __| |  _  /|  _  /| |  | ||  _  / 
+                                   | |____| | \ \| | \ \| |__| || | \ \ 
+                                   |______|_|  \_\_|  \_\\____/ |_|  \_\
+)" << std::endl;
+}
+void RedAlert(int times)
+{
+    for (int i = 0; i < times; i++) {
+        cout << "\a";
+        system("color 4F");
+        Sleep(100);
+        system("color 0F");
+        Sleep(100);
+    }
+}
+void GreenAlert(int times)
+{
+    for (int i = 0; i < times; i++) {
+        system("color 2F");
+        Sleep(100);
+        system("color 0F");
+        Sleep(100);
+    }
+}
+string ReadUserName()
+{
+    string Name = "";
+    cout << "Please enter your name : ";
+    getline(cin >> ws, Name);
+    return Name;
+}
+void PrintWelcome(string Name)
+{
+    cout << Name << ", Welcome to my program " << endl;
+    cout << "enter any grade with fraction to round it and check it pass or fail " << endl;
+}
+int ReadHowManySubjects()
+{
+    int NumberOfSubjects;
+    string Name = ReadUserName();
+    do {
+        PrintWelcome(Name);
+        cout << "Please enter how many Subjects : ";
+        cin >> NumberOfSubjects;
+        if (NumberOfSubjects <= 0 || NumberOfSubjects >= 16) {
+            system("cls");
+            erorr();
+            RedAlert(3);
+            system("cls");
+        }
+    } while (NumberOfSubjects <= 0 || NumberOfSubjects >= 16);
+    return NumberOfSubjects;
+}
+void ReadGrades(float Grades[], int NumberOfSubjects)
+{
+    cout << "\nPlease enter your " << NumberOfSubjects;
+    (NumberOfSubjects == 1) ? cout << " Grade\n" : cout << " Grades\n";
+    cout << "(Must be greater than 0 or smaller than 100)\n";
+
+    for (int i = 0; i < NumberOfSubjects; i++) {
+        do {
+            cout << "Subject " << i + 1 << " : ";
+            cin >> Grades[i];
+            if (Grades[i] < 0 || Grades[i] > 100) {
+                RedAlert(3);
+                cout << "\033[A\033[2K";
+            }
+        } while (Grades[i] < 0 || Grades[i] > 100);
+    }
+}
+void RoundingGrades(string PassOrFail[], float GradesBefore[], int GradesAfter[], int NumberOfSubjects)
+{
+    for (int i = 0; i < NumberOfSubjects; i++) {
+        GradesAfter[i] = round(GradesBefore[i]);
+
+        if (GradesAfter[i] >= 50) {
+            PassOrFail[i] = "Passed";
+        }
+        else {
+            if (GradesAfter[i] >= 45 && GradesAfter[i] < 50) {
+                GradesAfter[i] += 5;
+                PassOrFail[i] = "Passed by Decision";
+            }
+            else {
+                PassOrFail[i] = "Failed";
+            }
+        }
+    }
+}
+void PrintingGradesAfterRounding(string PassOrFail[], float GradesBefore[], int GradesAfter[], int NumberOfSubjects)
+{
+    int sum = 0;
+    float Avr = 0;
+
+    cout << "\n===========================================================\n";
+    cout << "Subject\tGrade Before\tGrade After\tStatus\n";
+    cout << "===========================================================\n";
+
+    for (int i = 0; i < NumberOfSubjects; i++) {
+        cout << i + 1 << ". \t" << GradesBefore[i] << " \t\t" << GradesAfter[i] << " \t\t" << PassOrFail[i] << endl;
+        sum += GradesAfter[i];
+    }
+
+    Avr = (float)sum / NumberOfSubjects;
+
+    cout << "-----------------------------------------------------------\n";
+    cout << "The Sum is     : " << sum << endl;
+    cout << "The Average is : " << Avr << endl;
+    cout << "-----------------------------------------------------------\n";
+
+    if (Avr >= 50) {
+        cout << "Congratulations, You Passed! :-) " << endl;
+        GreenAlert(5);
+    }
+    else {
+        if (Avr <= 10) {
+            cout << "Are you donkey, are you stupid, What are these Grades?!" << endl;
+            RedAlert(100);
+        }
+        else {
+            cout << "Failed, Good luck next year :-(" << endl;
+            RedAlert(5);
+        }
+    }
+}
+void endTheProgram()
+{
+    int NumberOfSubjects = ReadHowManySubjects();
+    float GradesBefore[15];
+    int GradesAfter[15];
+    string PassOrFail[15];
+
+    ReadGrades(GradesBefore, NumberOfSubjects);
+    RoundingGrades(PassOrFail, GradesBefore, GradesAfter, NumberOfSubjects);
+    PrintingGradesAfterRounding(PassOrFail, GradesBefore, GradesAfter, NumberOfSubjects);
+}
+int main()
+{
+    endTheProgram();
+    return 0;
+}
