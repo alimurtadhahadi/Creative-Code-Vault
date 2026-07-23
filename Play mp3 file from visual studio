@@ -1,0 +1,26 @@
+#include <iostream>
+#include <windows.h>
+#include <mmsystem.h> // 1. Library for playing sounds
+
+// 2. Link the Windows multimedia library (Required for Visual Studio)
+#pragma comment(lib, "winmm.lib") 
+
+using namespace std;
+
+int main() {
+    // Note: The audio file must be in .wav format
+    // the best converter (https://cloudconvert.com/mp3-to-wav)
+    string filePath = "C:\\Users\\user Name\\folder\\file name.wav";
+
+    cout << "Playing music in the background..." << endl;
+
+    // 3. Play the sound file asynchronously
+    PlaySoundA(filePath.c_str(), NULL, SND_FILENAME | SND_ASYNC);
+
+    cout << "Music is playing. Press any key to exit and stop the sound." << endl;
+
+    // 4. Pause the program so the music can keep playing
+    system("pause");
+
+    return 0;
+}
