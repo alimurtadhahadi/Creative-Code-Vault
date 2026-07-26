@@ -1,0 +1,10 @@
+#include <iostream>
+#include "MyOstreamLib.h";
+using namespace std;
+
+int main()
+{
+    printf("The page number = %0*d \n",100,1);
+    kiko::MyPrintf("The page number = %0*d \n", 100, 1);
+    return 0;
+}
