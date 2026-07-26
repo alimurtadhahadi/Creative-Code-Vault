@@ -1,0 +1,67 @@
+#pragma once
+#include <iostream>
+#include <string>
+
+namespace kiko
+{
+    void MyCout(std::string Text)
+    {
+        std::cout << Text;
+    }
+
+    void MyPrintf(std::string Text, int Num1 = 0, int Num2 = 0, int Num3 = 0, int Num4 = 0, int Num5 = 0)
+    {
+        int Args[5] = { Num1, Num2, Num3, Num4, Num5 };
+        int ArgCounter = 0;
+
+        for (int i = 0; i < Text.length(); i++)
+        {
+            if (Text[i] == '%')
+            {
+                if ((i + 1 < Text.length()) && Text[i + 1] == 'd')
+                {
+                    if (ArgCounter < 5)
+                    {
+                        std::cout << Args[ArgCounter];
+                        ArgCounter++;
+                    }
+                    i++;
+                }
+                else if ((i + 3 < Text.length()) && Text[i + 1] == '0' && Text[i + 2] == '*' && Text[i + 3] == 'd')
+                {
+                    if (ArgCounter + 1 < 5)
+                    {
+                        int width = Args[ArgCounter];
+                        int value = Args[ArgCounter + 1];
+                        ArgCounter += 2;
+
+                        std::string valStr = std::to_string(value);
+                        int zerosToAdd = width - valStr.length();
+
+                        if (value < 0)
+                        {
+                            std::cout << '-';
+                            valStr = valStr.substr(1);
+                        }
+
+                        for (int z = 0; z < zerosToAdd; z++)
+                        {
+                            std::cout << '0';
+                        }
+
+                        std::cout << valStr;
+                    }
+                    i += 3;
+                }
+                else
+                {
+                    std::cout << Text[i];
+                }
+            }
+            else
+            {
+                std::cout << Text[i];
+            }
+        }
+    }
+}
