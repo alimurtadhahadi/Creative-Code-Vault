@@ -1,3 +1,17 @@
+/*
+=================================== ⚙️ ﷽ ===================================
+  [TOPIC]    │ Custom Printf Implementation (Strings %s & Dynamic Width %*)
+  -----------|---------------------------------------------------------------
+  [CONTEXT]  │ Custom Namespace & String Parsing Engine
+  -----------|---------------------------------------------------------------
+  [AUTHOR]   │ Ali_Dev (@Ali_DevCode_Lab)
+  -----------|---------------------------------------------------------------
+  [DATE]     │ July 28, 2026 (Tuesday)
+  -----------|---------------------------------------------------------------
+  [DESC]     │ Added support for %s (strings) and %* (dynamic space width).
+===========================================================================
+*/
+
 #pragma once
 #include <iostream>
 #include <string>
@@ -6,14 +20,28 @@
 
 namespace kiko
 {
+    struct Arg
+    {
+        std::string strVal;
+        double numVal;
+        bool isString;
+
+        Arg() : strVal(""), numVal(0), isString(false) {}
+        Arg(int v) : strVal(""), numVal(v), isString(false) {}
+        Arg(double v) : strVal(""), numVal(v), isString(false) {}
+        Arg(float v) : strVal(""), numVal(v), isString(false) {}
+        Arg(const char* s) : strVal(s ? s : ""), numVal(0), isString(true) {}
+        Arg(const std::string& s) : strVal(s), numVal(0), isString(true) {}
+    };
+
     void MyCout(std::string Text)
     {
         std::cout << Text;
     }
 
-    void MyPrintf(std::string Text, double Num1 = 0, double Num2 = 0, double Num3 = 0, double Num4 = 0, double Num5 = 0)
+    void MyPrintf(std::string Text, Arg Num1 = Arg(), Arg Num2 = Arg(), Arg Num3 = Arg(), Arg Num4 = Arg(), Arg Num5 = Arg())
     {
-        double Args[5] = { Num1, Num2, Num3, Num4, Num5 };
+        Arg Args[5] = { Num1, Num2, Num3, Num4, Num5 };
         int ArgCounter = 0;
 
         for (int i = 0; i < Text.length(); i++)
@@ -26,13 +54,23 @@ namespace kiko
                     {
                         if (Text[i + 1] == 'd')
                         {
-                            std::cout << (int)Args[ArgCounter];
+                            if (Args[ArgCounter].isString)
+                                std::cout << Args[ArgCounter].strVal;
+                            else
+                                std::cout << (int)Args[ArgCounter].numVal;
                         }
                         else
                         {
-                            std::ostringstream oss;
-                            oss << std::fixed << std::setprecision(6) << Args[ArgCounter];
-                            std::cout << oss.str();
+                            if (Args[ArgCounter].isString)
+                            {
+                                std::cout << Args[ArgCounter].strVal;
+                            }
+                            else
+                            {
+                                std::ostringstream oss;
+                                oss << std::fixed << std::setprecision(6) << Args[ArgCounter].numVal;
+                                std::cout << oss.str();
+                            }
                         }
                         ArgCounter++;
                     }
@@ -42,12 +80,12 @@ namespace kiko
                 {
                     if (ArgCounter + 1 < 5)
                     {
-                        int width = (int)Args[ArgCounter];
-                        int value = (int)Args[ArgCounter + 1];
+                        int width = (int)Args[ArgCounter].numVal;
+                        int value = (int)Args[ArgCounter + 1].numVal;
                         ArgCounter += 2;
 
                         std::string valStr = std::to_string(value);
-                        int zerosToAdd = width - valStr.length();
+                        int zerosToAdd = width - (int)valStr.length();
 
                         if (value < 0)
                         {
@@ -70,13 +108,13 @@ namespace kiko
                     {
                         if (ArgCounter + 1 < 5)
                         {
-                            int precision = (int)Args[ArgCounter];
-                            double value = Args[ArgCounter + 1];
+                            int precision = (int)Args[ArgCounter].numVal;
+                            Arg valueArg = Args[ArgCounter + 1];
                             ArgCounter += 2;
 
                             if (Text[i + 3] == 'd')
                             {
-                                int intVal = (int)value;
+                                int intVal = (int)valueArg.numVal;
                                 std::string valStr = std::to_string(intVal);
 
                                 if (intVal < 0)
@@ -85,7 +123,7 @@ namespace kiko
                                     valStr = valStr.substr(1);
                                 }
 
-                                int zerosToAdd = precision - valStr.length();
+                                int zerosToAdd = precision - (int)valStr.length();
                                 for (int z = 0; z < zerosToAdd; z++)
                                 {
                                     std::cout << '0';
@@ -96,7 +134,7 @@ namespace kiko
                             else
                             {
                                 std::ostringstream oss;
-                                oss << std::fixed << std::setprecision(precision) << value;
+                                oss << std::fixed << std::setprecision(precision) << valueArg.numVal;
                                 std::cout << oss.str();
                             }
                         }
@@ -119,12 +157,12 @@ namespace kiko
                         {
                             if (ArgCounter < 5)
                             {
-                                double value = Args[ArgCounter];
+                                Arg valueArg = Args[ArgCounter];
                                 ArgCounter++;
 
                                 if (Text[j] == 'd')
                                 {
-                                    int intVal = (int)value;
+                                    int intVal = (int)valueArg.numVal;
                                     std::string valStr = std::to_string(intVal);
 
                                     if (intVal < 0)
@@ -133,7 +171,7 @@ namespace kiko
                                         valStr = valStr.substr(1);
                                     }
 
-                                    int zerosToAdd = precision - valStr.length();
+                                    int zerosToAdd = precision - (int)valStr.length();
                                     for (int z = 0; z < zerosToAdd; z++)
                                     {
                                         std::cout << '0';
@@ -144,7 +182,7 @@ namespace kiko
                                 else
                                 {
                                     std::ostringstream oss;
-                                    oss << std::fixed << std::setprecision(precision) << value;
+                                    oss << std::fixed << std::setprecision(precision) << valueArg.numVal;
                                     std::cout << oss.str();
                                 }
                             }
@@ -154,6 +192,70 @@ namespace kiko
                         {
                             std::cout << Text[i];
                         }
+                    }
+                }
+                else if ((i + 1 < Text.length()) && Text[i + 1] == 's')
+                {
+                    if (ArgCounter < 5)
+                    {
+                        if (Args[ArgCounter].isString)
+                        {
+                            std::cout << Args[ArgCounter].strVal;
+                        }
+                        else
+                        {
+                            std::cout << (int)Args[ArgCounter].numVal;
+                        }
+                        ArgCounter++;
+                    }
+                    i++;
+                }
+                else if ((i + 1 < Text.length()) && Text[i + 1] == '*')
+                {
+                    if (i + 2 < Text.length())
+                    {
+                        char type = Text[i + 2];
+                        if (type == 'd' || type == 'f' || type == 's')
+                        {
+                            if (ArgCounter + 1 < 5)
+                            {
+                                int width = (int)Args[ArgCounter].numVal;
+                                ArgCounter++;
+
+                                std::string strOut = "";
+                                if (type == 's')
+                                {
+                                    strOut = Args[ArgCounter].isString ? Args[ArgCounter].strVal : std::to_string((int)Args[ArgCounter].numVal);
+                                }
+                                else if (type == 'd')
+                                {
+                                    strOut = std::to_string((int)Args[ArgCounter].numVal);
+                                }
+                                else if (type == 'f')
+                                {
+                                    std::ostringstream oss;
+                                    oss << std::fixed << std::setprecision(6) << Args[ArgCounter].numVal;
+                                    strOut = oss.str();
+                                }
+
+                                int spacesToAdd = width - (int)strOut.length();
+                                for (int s = 0; s < spacesToAdd; s++)
+                                {
+                                    std::cout << ' ';
+                                }
+                                std::cout << strOut;
+                                ArgCounter++;
+                            }
+                            i += 2;
+                        }
+                        else
+                        {
+                            std::cout << Text[i];
+                        }
+                    }
+                    else
+                    {
+                        std::cout << Text[i];
                     }
                 }
                 else
