@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <iomanip>
 
 namespace kiko
 {
@@ -9,20 +11,29 @@ namespace kiko
         std::cout << Text;
     }
 
-    void MyPrintf(std::string Text, int Num1 = 0, int Num2 = 0, int Num3 = 0, int Num4 = 0, int Num5 = 0)
+    void MyPrintf(std::string Text, double Num1 = 0, double Num2 = 0, double Num3 = 0, double Num4 = 0, double Num5 = 0)
     {
-        int Args[5] = { Num1, Num2, Num3, Num4, Num5 };
+        double Args[5] = { Num1, Num2, Num3, Num4, Num5 };
         int ArgCounter = 0;
 
         for (int i = 0; i < Text.length(); i++)
         {
             if (Text[i] == '%')
             {
-                if ((i + 1 < Text.length()) && Text[i + 1] == 'd')
+                if ((i + 1 < Text.length()) && (Text[i + 1] == 'd' || Text[i + 1] == 'f'))
                 {
                     if (ArgCounter < 5)
                     {
-                        std::cout << Args[ArgCounter];
+                        if (Text[i + 1] == 'd')
+                        {
+                            std::cout << (int)Args[ArgCounter];
+                        }
+                        else
+                        {
+                            std::ostringstream oss;
+                            oss << std::fixed << std::setprecision(6) << Args[ArgCounter];
+                            std::cout << oss.str();
+                        }
                         ArgCounter++;
                     }
                     i++;
@@ -31,8 +42,8 @@ namespace kiko
                 {
                     if (ArgCounter + 1 < 5)
                     {
-                        int width = Args[ArgCounter];
-                        int value = Args[ArgCounter + 1];
+                        int width = (int)Args[ArgCounter];
+                        int value = (int)Args[ArgCounter + 1];
                         ArgCounter += 2;
 
                         std::string valStr = std::to_string(value);
@@ -52,6 +63,98 @@ namespace kiko
                         std::cout << valStr;
                     }
                     i += 3;
+                }
+                else if ((i + 1 < Text.length()) && Text[i + 1] == '.')
+                {
+                    if ((i + 3 < Text.length()) && Text[i + 2] == '*' && (Text[i + 3] == 'd' || Text[i + 3] == 'f'))
+                    {
+                        if (ArgCounter + 1 < 5)
+                        {
+                            int precision = (int)Args[ArgCounter];
+                            double value = Args[ArgCounter + 1];
+                            ArgCounter += 2;
+
+                            if (Text[i + 3] == 'd')
+                            {
+                                int intVal = (int)value;
+                                std::string valStr = std::to_string(intVal);
+
+                                if (intVal < 0)
+                                {
+                                    std::cout << '-';
+                                    valStr = valStr.substr(1);
+                                }
+
+                                int zerosToAdd = precision - valStr.length();
+                                for (int z = 0; z < zerosToAdd; z++)
+                                {
+                                    std::cout << '0';
+                                }
+
+                                std::cout << valStr;
+                            }
+                            else
+                            {
+                                std::ostringstream oss;
+                                oss << std::fixed << std::setprecision(precision) << value;
+                                std::cout << oss.str();
+                            }
+                        }
+                        i += 3;
+                    }
+                    else
+                    {
+                        int j = i + 2;
+                        int precision = 0;
+                        bool foundDigit = false;
+
+                        while (j < Text.length() && Text[j] >= '0' && Text[j] <= '9')
+                        {
+                            precision = (precision * 10) + (Text[j] - '0');
+                            foundDigit = true;
+                            j++;
+                        }
+
+                        if (foundDigit && j < Text.length() && (Text[j] == 'd' || Text[j] == 'f'))
+                        {
+                            if (ArgCounter < 5)
+                            {
+                                double value = Args[ArgCounter];
+                                ArgCounter++;
+
+                                if (Text[j] == 'd')
+                                {
+                                    int intVal = (int)value;
+                                    std::string valStr = std::to_string(intVal);
+
+                                    if (intVal < 0)
+                                    {
+                                        std::cout << '-';
+                                        valStr = valStr.substr(1);
+                                    }
+
+                                    int zerosToAdd = precision - valStr.length();
+                                    for (int z = 0; z < zerosToAdd; z++)
+                                    {
+                                        std::cout << '0';
+                                    }
+
+                                    std::cout << valStr;
+                                }
+                                else
+                                {
+                                    std::ostringstream oss;
+                                    oss << std::fixed << std::setprecision(precision) << value;
+                                    std::cout << oss.str();
+                                }
+                            }
+                            i = j;
+                        }
+                        else
+                        {
+                            std::cout << Text[i];
+                        }
+                    }
                 }
                 else
                 {
