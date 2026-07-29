@@ -1,0 +1,107 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <iomanip> 
+using namespace std;
+
+struct stUserInfo
+{
+    string Name;
+    string FatherName;
+    string GrandfatherName;
+    string FullName;
+    int Age = 0;
+    string Phone;
+    string Gender;
+};
+string GetAnythingFromUser(string Message)
+{
+    string AnyThing;
+    cout << Message;
+    getline(cin >> ws, AnyThing);
+    return AnyThing;
+}
+int ReadNumber(string Message)
+{
+    string Input;
+    int Number;
+
+    cout << Message;
+
+    while (true)
+    {
+        getline(cin >> ws, Input);
+        stringstream ss(Input);
+
+        if (ss >> Number && ss.eof())
+        {
+            return Number;
+        }
+
+        cout << "\033[A\033[2K";
+        cout << "Invalid Number, Enter a valid one : ";
+    }
+}
+stUserInfo Assembl()
+{
+    stUserInfo UserInfo;
+    UserInfo.Name = GetAnythingFromUser("Please enter Your Name : ");
+    UserInfo.FatherName = GetAnythingFromUser("Please enter Your Father's Name : ");
+    UserInfo.GrandfatherName = GetAnythingFromUser("Please enter Your GrandFather's Name : ");
+
+    UserInfo.FullName = UserInfo.Name + " " + UserInfo.FatherName + " " + UserInfo.GrandfatherName;
+
+    UserInfo.Age = ReadNumber("Please enter your Age : ");
+    UserInfo.Phone = GetAnythingFromUser("Please enter your Phone Number : ");
+    UserInfo.Gender = GetAnythingFromUser("Please enter your Gender : ");
+
+    return UserInfo;
+}
+int WhatVariableIsTheBiggest(stUserInfo UserInfo)
+{
+    int Max = UserInfo.FullName.length();
+
+    if (to_string(UserInfo.Age).length() > Max)
+        Max = to_string(UserInfo.Age).length();
+
+    if (UserInfo.Phone.length() > Max)
+        Max = UserInfo.Phone.length();
+
+    if (UserInfo.Gender.length() > Max)
+        Max = UserInfo.Gender.length();
+
+    return Max;
+}
+void PrintCenteredRow(string Label, string Value, int MaxWidth)
+{
+    int TextLen = Value.length();
+    int TotalSpaces = MaxWidth - TextLen;
+
+    int LeftSpaces = TotalSpaces / 2;
+    int RightSpaces = TotalSpaces - LeftSpaces;
+
+    cout << "|" << left << setw(14) << Label << "|" << right << setw(LeftSpaces + TextLen+2) << Value << setw(RightSpaces + 3) << "|" << endl;
+}
+
+void PrintCard(stUserInfo UserInfo)
+{
+    int MaxWidth = WhatVariableIsTheBiggest(UserInfo);
+    int TotalCardWidth = 14 + MaxWidth + 3;
+
+    cout << "\n+" << string(TotalCardWidth +2, '=') << "+" << endl;
+
+    PrintCenteredRow("Full Name", UserInfo.FullName, MaxWidth);
+    PrintCenteredRow("Age", to_string(UserInfo.Age), MaxWidth);
+    PrintCenteredRow("Phone Number", UserInfo.Phone, MaxWidth);
+    PrintCenteredRow("Gender", UserInfo.Gender, MaxWidth);
+
+    cout << "+" << string(TotalCardWidth +2, '=') << "+" << endl;
+}
+
+int main()
+{
+    stUserInfo User = Assembl();
+    PrintCard(User);
+
+    return 0;
+}
