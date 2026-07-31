@@ -1,0 +1,142 @@
+#include <iostream>
+#include <vector>
+#include <cstdio>
+#include <string>
+#include <windows.h>
+using namespace std;
+
+const string COLOR_RESET = "\033[0m";
+const string COLOR_YELLOW = "\033[1;33m";
+const string COLOR_GREEN = "\033[1;32m";
+const string COLOR_CYAN = "\033[1;36m";
+void EnableVirtualTerminalProcessing()
+{
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut == INVALID_HANDLE_VALUE) return;
+
+    DWORD dwMode = 0;
+    if (!GetConsoleMode(hOut, &dwMode)) return;
+
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
+}
+char ToAsciiChar(int code)
+{
+    return static_cast<unsigned char>(code);
+}
+vector<int> GenerateCubeVector(int limit)
+{
+    vector<int> vNumbers;
+    vNumbers.reserve(limit * limit * limit);
+
+    for (int x = 1; x <= limit; x++) {
+        for (int y = 1; y <= limit; y++) {
+            for (int z = 1; z <= limit; z++) {
+                vNumbers.push_back(x * y * z);
+            }
+        }
+    }
+    return vNumbers;
+}
+void PrintCubeBlock(int layer, int block, const vector<int>& vNumbers, int& seq)
+{
+    char TL = ToAsciiChar(201); // ╔
+    char TR = ToAsciiChar(187); // ╗
+    char BL = ToAsciiChar(200); // ╚
+    char BR = ToAsciiChar(188); // ╝
+    char H = ToAsciiChar(205); // ═ 
+    char V = ToAsciiChar(186); // ║ 
+    char TR_J = ToAsciiChar(204); // ╠ 
+    char TL_J = ToAsciiChar(185); // ╣ 
+    char CR = ToAsciiChar(206); // ╬ 
+
+    printf("  %s%c%s[ Cubes Block (%2d , %2d) ]%s%s%c%s\n",
+        COLOR_YELLOW.c_str(), TL, string(10, H).c_str(),
+        layer, block,
+        string(79, H).c_str(), COLOR_YELLOW.c_str(), TR, COLOR_RESET.c_str());
+
+    printf("  %s%c%s ", COLOR_YELLOW.c_str(), V, COLOR_RESET.c_str());
+
+    for (int k = 0; k < 10; k++) {
+
+        if (k == 4 || k == 9) {
+            printf("%s%2d * %2d * %2d = %4d%s  ",
+                COLOR_GREEN.c_str(), layer, block, k + 1, vNumbers[seq++], COLOR_RESET.c_str());
+        }
+        else {
+            printf("%s%2d * %2d * %2d = %4d%s  %s%c%s ",
+                COLOR_GREEN.c_str(), layer, block, k + 1, vNumbers[seq++], COLOR_RESET.c_str(),
+                COLOR_YELLOW.c_str(), V, COLOR_RESET.c_str());
+        }
+
+        if (k == 4) {
+            printf("%s%c%s\n  ", COLOR_YELLOW.c_str(), V, COLOR_RESET.c_str());
+
+            cout << COLOR_YELLOW << TR_J;
+            for (int j = 1; j < 6; j++) {
+                for (int i = 1; i < 23; i++) {
+                    cout << H;
+                }
+                if (j < 5) {
+                    cout << CR;
+                }
+            }
+            cout << TL_J << COLOR_RESET << endl;
+
+            printf("  %s%c%s ", COLOR_YELLOW.c_str(), V, COLOR_RESET.c_str());
+        }
+    }
+
+    printf("%s%c%s\n", COLOR_YELLOW.c_str(), V, COLOR_RESET.c_str());
+
+    printf("  %s%c%s%c%s\n\n",
+        COLOR_YELLOW.c_str(), BL, string(114, H).c_str(), BR, COLOR_RESET.c_str());
+}
+
+void Display3DCubesSystem(const vector<int>& vNumbers)
+{
+    char TL = ToAsciiChar(201); // ╔
+    char TR = ToAsciiChar(187); // ╗
+    char BL = ToAsciiChar(200); // ╚
+    char BR = ToAsciiChar(188); // ╝
+    char H = ToAsciiChar(205); // ═
+    char V = ToAsciiChar(186); // ║
+
+    int seq = 0;
+
+    cout << COLOR_YELLOW << TL << string(80, H) << TR << COLOR_RESET << endl;
+    cout << COLOR_YELLOW << V << COLOR_CYAN << "           [ 3D CUBES VECTOR - SEGMENTED & PAGINATED DISPLAY SYSTEM ]           " << COLOR_YELLOW << V << COLOR_RESET << endl;
+    cout << COLOR_YELLOW << BL << string(80, H) << BR << COLOR_RESET << endl;
+
+    for (int i = 0; i < 10; i++) {
+
+        cout << endl << COLOR_YELLOW << TL << string(80, H) << TR << COLOR_RESET << endl;
+        printf("%s%c%s                 >>> LAYER %2d / 10 (Contains 100 Equations) <<<                 %s%c%s\n",
+            COLOR_YELLOW.c_str(), V, COLOR_CYAN.c_str(), i + 1, COLOR_YELLOW.c_str(), V, COLOR_RESET.c_str());
+        cout << COLOR_YELLOW << BL << string(80, H) << BR << COLOR_RESET << endl << endl;
+
+        for (int j = 0; j < 10; j++) {
+            PrintCubeBlock(i + 1, j + 1, vNumbers, seq);
+        }
+
+        if (i < 9) {
+            printf("  %s[    PRESS ENTER TO DISPLAY LAYER %2d / 10 ... ]%s", COLOR_CYAN.c_str(), i + 2, COLOR_RESET.c_str());
+            cin.get();
+        }
+    }
+
+    cout << "===============================================================================\n";
+    printf("  %sSUCCESS: All %d equations processed and displayed perfectly!%s\n",
+        COLOR_GREEN.c_str(), static_cast<int>(vNumbers.size()), COLOR_RESET.c_str());
+    cout << "===============================================================================\n";
+}
+
+int main()
+{
+    SetConsoleOutputCP(437);
+    EnableVirtualTerminalProcessing();
+    vector<int> vNumbers = GenerateCubeVector(10);
+    Display3DCubesSystem(vNumbers);
+
+    return 0;
+}
