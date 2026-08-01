@@ -1,0 +1,40 @@
+#include <iostream>
+#include <windows.h>
+#include <string>
+using namespace std;
+
+string Usersentence()
+{
+    string sentence;
+    cout << "Please Enter a sentence : ";
+    getline(cin >> ws, sentence);
+    return sentence;
+}
+unsigned int SpeedOfShowingUserWord()
+{
+    unsigned int Speed;
+    cout << "Please enter Number Speed Of Showing your Word (ms) : ";
+    cin >> Speed;
+    return Speed;
+}
+int main()
+{
+    string sentence = Usersentence();
+    unsigned int Speed = SpeedOfShowingUserWord();
+
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    cout << "\nResult:\n";
+
+    for (int i = 0; i < sentence.length(); i++) {
+        int color = (i % 14) + 1;
+        SetConsoleTextAttribute(hConsole, color);
+        cout << sentence[i];
+        Sleep(Speed);
+    }
+
+    SetConsoleTextAttribute(hConsole, 15);
+    cout << "\n\n";
+
+    return 0;
+}
